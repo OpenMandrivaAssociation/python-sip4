@@ -3,8 +3,6 @@
 %define sip_api_minor 1
 %define sip_api       %{sip_api_major}.%{sip_api_minor}
 
-%define _disable_ld_no_undefined 1
-
 %ifarch aarch64
 %define _disable_lto 1
 %endif
@@ -55,6 +53,17 @@ Python sip bindings for Qt5.
 %{py_platsitedir}/PyQt5*
 
 #------------------------------------------------------------
+%package -n python-sip4-wx
+Summary:	Riverbanks' python sip Wx
+Conflicts:	%{name} < 1:4.19.17-2
+
+%description -n python-sip4-wx
+Python sip bindings for WxWidgets.
+
+%files -n python-sip4-wx
+%{py_platsitedir}/wx
+
+#------------------------------------------------------------
 %package -n python2-sip4
 Summary:	Riverbanks' python sip
 
@@ -69,7 +78,6 @@ create bindings for any C or C++ library.
 %{py2_platsitedir}/s*
 %{py2_incdir}/sip.h
 
-
 #------------------------------------------------------------
 %package -n python2-sip4-qt5
 Summary:	Riverbanks' python sip Qt5
@@ -82,13 +90,19 @@ Python2 sip bindings for Qt5.
 %{py2_platsitedir}/PyQt5*
 
 #------------------------------------------------------------
+%package -n python2-sip4-wx
+Summary:	Riverbanks' python2 sip Wx
+Conflicts:	%{name} < 1:4.19.17-2
+
+%description -n python2-sip4-wx
+Python2 sip bindings for WxWidgets.
+
+%files -n python2-sip4-wx
+%{py2_platsitedir}/wx
+
+#------------------------------------------------------------
 %prep
-%setup -qc sip-%{version}
-%autopatch -p0
-mv sip-%{version} python3
-for i in python2 qt5-python3 qt5-python2; do
-	cp -a python3 $i
-done
+%autosetup -p1 -n sip-%{version}
 
 # Check API minor/major numbers
 export real_api_major=`grep SIP_API_MAJOR_NR siplib/sip.h.in|head -n1|awk -F' ' '{print $3}'`
@@ -109,21 +123,35 @@ done
 
 %build
 
-for i in python3 qt5-python3 python2 qt5-python2; do
-	echo $i |grep -q python2 && PY=python2 || PY=python
+for i in python3 qt5-python3 python2 qt5-python2 wx-python3 wx-python2; do
+	[ "$i" = "wx-python3" ] && sed -i -e 's|target = sip|target = siplib|g' siplib/siplib.sbf || :
+
+	mkdir BUILD-$i
+	cd BUILD-$i
+
+	if echo $i |grep -q python2; then
+		PY=python2
+		LFLAGS="%{ldflags} -lpython%{py2_ver}"
+	else
+		PY=python
+		LFLAGS="%{ldflags} -lpython%{py3_ver}"
+	fi
 	echo $i |grep -q qt5 && EXT="--sip-module PyQt5.sip" || EXT=""
-	pushd $i
-	$PY configure.py --no-dist-info $EXT CC="%_cc" CFLAGS="%{optflags} -fPIC" CXX="%{__cxx}" LINK="%{__cxx}" LINK_SHLIB="%{__cxx}" LFLAGS="%{ldflags}"
-	%make_build CC=%{__cc} CXX=%{__cxx} CFLAGS="%{optflags} -fPIC" CXXFLAGS="%{optflags} -fPIC" #LIBS="%{?ldflags} -lpython%{py3_ver}"
-	popd
+	echo $i |grep -q wx && EXT="--sip-module=wx.siplib" || :
+	echo $i |grep -q -- - && EXT="$EXT --no-tools"
+
+	$PY ../configure.py --no-dist-info $EXT CC="%_cc" CFLAGS="%{optflags} -fPIC" CXX="%{__cxx}" LINK="%{__cxx}" LINK_SHLIB="%{__cxx}" LFLAGS="$LFLAGS"
+	%make_build CC=%{__cc} CXX=%{__cxx} CFLAGS="%{optflags} -fPIC" CXXFLAGS="%{optflags} -fPIC" LIBS="$LFLAGS"
+	cd ..
 done
+sed -i -e 's|target = siplib|target = sip|g' siplib/siplib.sbf
 
 %install
-for i in python2 qt5-python2 qt5-python3 python3; do
-	pushd $i
+for i in python2 wx-python2 qt5-python2 wx-python3 qt5-python3 python3; do
+	cd BUILD-$i
 	%make_install
 	[ "$i" = "python2" ] && mv %{buildroot}%{_bindir}/sip %{buildroot}%{_bindir}/python2-sip
-	popd
+	cd ..
 done
 
 mkdir -p %{buildroot}%{_sysconfdir}/rpm/macros.d/
