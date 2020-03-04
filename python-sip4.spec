@@ -44,7 +44,6 @@ create bindings for any C or C++ library.
 #------------------------------------------------------------
 %package -n python-sip4-qt5
 Summary:	Riverbanks' python sip Qt5
-Conflicts:	%{name} < 1:4.19.17-2
 
 %description -n python-sip4-qt5
 Python sip bindings for Qt5.
@@ -55,7 +54,6 @@ Python sip bindings for Qt5.
 #------------------------------------------------------------
 %package -n python-sip4-wx
 Summary:	Riverbanks' python sip Wx
-Conflicts:	%{name} < 1:4.19.17-2
 
 %description -n python-sip4-wx
 Python sip bindings for WxWidgets.
@@ -81,7 +79,6 @@ create bindings for any C or C++ library.
 #------------------------------------------------------------
 %package -n python2-sip4-qt5
 Summary:	Riverbanks' python sip Qt5
-Conflicts:	python2-sip < 1:4.19.17-2
 
 %description -n python2-sip4-qt5
 Python2 sip bindings for Qt5.
@@ -92,7 +89,6 @@ Python2 sip bindings for Qt5.
 #------------------------------------------------------------
 %package -n python2-sip4-wx
 Summary:	Riverbanks' python2 sip Wx
-Conflicts:	%{name} < 1:4.19.17-2
 
 %description -n python2-sip4-wx
 Python2 sip bindings for WxWidgets.
