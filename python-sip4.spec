@@ -9,25 +9,26 @@
 %define _disable_lto 1
 %endif
 
-Summary:	Riverbanks' python sip
-Name:		python-sip
-Epoch:		1
+Summary:	Old version of the SIP Python bindings generator
+Name:		python-sip4
 Version:	4.19.21
 Release:	1
 Group:		Development/Python
 License:	GPLv2+
 Url:		http://www.riverbankcomputing.co.uk/software/sip/intro
 Source0:	https://www.riverbankcomputing.com/static/Downloads/sip/%{version}/sip-%{version}.tar.gz
-Source1:	python-sip.rpmlintrc
-#Patch0:		sip-4.19.10-destdir.patch
-#Patch1:		sip-4.19.10-py2.patch
+Source1:	python-sip4.rpmlintrc
+Source10:	sip-wrapper.sh
 BuildRequires:	pkgconfig(bzip2)
 BuildRequires:	pkgconfig(python3)
 BuildRequires:	pkgconfig(python2)
 Obsoletes:	sip < %{version}
 Obsoletes:	sip-devel < %{version}
 Provides:	sip-api(%{sip_api_major}) = %{sip_api}
-%rename		python3-sip
+# make install should not strip (by default), kills -debuginfo
+Patch50:	sip-4.18-no_strip.patch
+# Avoid hardcoding sip.so (needed for wxpython's siplib.so)
+Patch53:	sip-4.19.18-no_hardcode_sip_so.patch
 
 %description
 SIP is a tool that makes it very easy to create Python bindings
@@ -43,41 +44,41 @@ create bindings for any C or C++ library.
 %{_sysconfdir}/rpm/macros.d/sip.macros
 
 #------------------------------------------------------------
-%package -n python-sip-qt5
+%package -n python-sip4-qt5
 Summary:	Riverbanks' python sip Qt5
 Conflicts:	%{name} < 1:4.19.17-2
 
-%description -n python-sip-qt5
+%description -n python-sip4-qt5
 Python sip bindings for Qt5.
 
-%files -n python-sip-qt5
+%files -n python-sip4-qt5
 %{py_platsitedir}/PyQt5*
 
 #------------------------------------------------------------
-%package -n python2-sip
+%package -n python2-sip4
 Summary:	Riverbanks' python sip
 
-%description -n python2-sip
+%description -n python2-sip4
 SIP is a tool that makes it very easy to create Python bindings
 for C and C++ libraries. It was originally developed to create PyQt,
 the Python bindings for the Qt toolkit, but can be used to
 create bindings for any C or C++ library.
 
-%files -n python2-sip
+%files -n python2-sip4
 %{_bindir}/python2-sip
 %{py2_platsitedir}/s*
 %{py2_incdir}/sip.h
 
 
 #------------------------------------------------------------
-%package -n python2-sip-qt5
+%package -n python2-sip4-qt5
 Summary:	Riverbanks' python sip Qt5
 Conflicts:	python2-sip < 1:4.19.17-2
 
-%description -n python2-sip-qt5
+%description -n python2-sip4-qt5
 Python2 sip bindings for Qt5.
 
-%files -n python2-sip-qt5
+%files -n python2-sip4-qt5
 %{py2_platsitedir}/PyQt5*
 
 #------------------------------------------------------------
