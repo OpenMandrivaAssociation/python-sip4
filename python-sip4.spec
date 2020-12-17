@@ -10,7 +10,7 @@
 Summary:	Old version of the SIP Python bindings generator
 Name:		python-sip4
 Version:	4.19.21
-Release:	1
+Release:	2
 Group:		Development/Python
 License:	GPLv2+
 Url:		http://www.riverbankcomputing.co.uk/software/sip/intro
