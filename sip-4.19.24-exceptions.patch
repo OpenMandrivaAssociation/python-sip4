@@ -1,0 +1,21 @@
+diff -up sip-4.19.24/configure.py.omv~ sip-4.19.24/configure.py
+--- sip-4.19.24/configure.py.omv~	2021-01-13 22:47:24.379041228 +0100
++++ sip-4.19.24/configure.py	2021-01-13 22:47:33.862172154 +0100
+@@ -383,7 +383,7 @@ def create_makefiles(macros):
+         pro.write("TEMPLATE = app\n")
+         pro.write("TARGET = sip\n")
+         pro.write("CONFIG -= qt app_bundle\n")
+-        pro.write("CONFIG += warn_on exceptions_off console %s\n" % (
++        pro.write("CONFIG += warn_on console %s\n" % (
+                 ("debug" if opts.debug else "release")))
+ 
+         pro.write("\n")
+@@ -461,7 +461,7 @@ def create_makefiles(macros):
+         pro.write("TEMPLATE = lib\n")
+         pro.write("TARGET = sip\n")
+         pro.write("CONFIG -= qt\n")
+-        pro.write("CONFIG += warn_on exceptions_off %s %s\n" % (
++        pro.write("CONFIG += warn_on %s %s\n" % (
+                 ("staticlib" if opts.static else "plugin plugin_bundle"),
+                 ("debug" if opts.debug else "release")))
+ 

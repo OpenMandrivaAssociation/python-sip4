@@ -9,8 +9,8 @@
 
 Summary:	Old version of the SIP Python bindings generator
 Name:		python-sip4
-Version:	4.19.21
-Release:	2
+Version:	4.19.24
+Release:	1
 Group:		Development/Python
 License:	GPLv2+
 Url:		http://www.riverbankcomputing.co.uk/software/sip/intro
@@ -23,6 +23,9 @@ BuildRequires:	pkgconfig(python2)
 Obsoletes:	sip < %{version}
 Obsoletes:	sip-devel < %{version}
 Provides:	sip-api(%{sip_api_major}) = %{sip_api}
+# Don't use exceptions_off - it breaks calibre and doesn't really
+# help much with modern compilers
+Patch0:		sip-4.19.24-exceptions.patch
 # make install should not strip (by default), kills -debuginfo
 Patch50:	sip-4.18-no_strip.patch
 # Avoid hardcoding sip.so (needed for wxpython's siplib.so)
