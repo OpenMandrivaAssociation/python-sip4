@@ -13,7 +13,7 @@ Version:	4.19.25
 Release:	3
 Group:		Development/Python
 License:	GPLv2+
-Url:		http://www.riverbankcomputing.co.uk/software/sip/intro
+Url:		https://www.riverbankcomputing.co.uk/software/sip/intro
 Source0:	https://www.riverbankcomputing.com/static/Downloads/sip/%{version}/sip-%{version}.tar.gz
 Source1:	python-sip4.rpmlintrc
 Source10:	sip-wrapper.sh
